@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Citation Score — Free GEO Readiness Calculator | SEOOnly</title>
+<meta name="description" content="Score your page's readiness to be cited by ChatGPT, Perplexity and Google AI Overviews. Free 100-point AI Citation Score calculator from SEOOnly.">
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#0f3d5c;
+    --teal:#12594f;
+    --mint:#7fe7d4;
+    --ink:#1a2332;
+    --muted:#5b6b7a;
+    --line:#dde6ea;
+    --paper:#f4f8f9;
+    --red:#c0392b;
+    --amber:#d68910;
+    --green:#1e8449;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    color:var(--ink);
+    background:#fff;
+    line-height:1.5;
+  }
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 55%,var(--teal) 100%);
+    color:#fff;
+    padding:48px 24px 56px;
+  }
+  .hero-inner{max-width:760px;margin:0 auto;}
+  .brand{font-size:13px;letter-spacing:3px;font-weight:700;color:var(--mint);}
+  .brand-sub{font-size:10.5px;letter-spacing:2px;color:#cfe8ff;margin-top:2px;}
+  h1{font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.12;margin:22px 0 10px;}
+  h1 em{font-style:normal;color:var(--mint);}
+  .lede{font-size:15.5px;color:#dceeff;max-width:520px;margin:0 0 20px;}
+  .meta-row{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#a9c4d9;}
+  .meta-row span{display:flex;align-items:center;gap:6px;}
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--mint);display:inline-block;}
+
+  /* ---------- LAYOUT ---------- */
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+  .score-bar{
+    position:sticky;top:0;z-index:20;
+    background:#fff;
+    border-bottom:1px solid var(--line);
+    box-shadow:0 2px 10px rgba(11,37,69,0.06);
+  }
+  .score-bar-inner{
+    max-width:760px;margin:0 auto;padding:12px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .score-label{font-size:11px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;}
+  .score-value{font-size:24px;font-weight:800;color:var(--navy);}
+  .score-value span{font-size:13px;font-weight:400;color:var(--muted);}
+  .progress-track{flex:1;height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin:0 16px;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--mint));width:0%;transition:width .35s ease;}
+  .band-pill{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;white-space:nowrap;}
+
+  /* ---------- CATEGORY ---------- */
+  .intro{padding:32px 0 8px;}
+  .intro h2{font-size:19px;margin:0 0 8px;color:var(--navy);}
+  .intro p{font-size:13.5px;color:var(--muted);margin:0;}
+
+  .category{margin-top:28px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .cat-head{
+    background:var(--navy);color:#fff;padding:14px 18px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .cat-head h3{margin:0;font-size:14.5px;}
+  .cat-head .cat-pts{font-size:12px;color:var(--mint);font-weight:700;}
+  .item{
+    padding:16px 18px;border-bottom:1px solid #eef2f4;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .item:last-child{border-bottom:none;}
+  .item-text{font-size:13.5px;flex:1;min-width:220px;}
+  .opts{display:flex;gap:6px;flex-shrink:0;}
+  .opt{
+    border:1.5px solid var(--line);
+    background:#fff;
+    color:var(--muted);
+    font-size:11.5px;
+    font-weight:600;
+    padding:7px 12px;
+    border-radius:7px;
+    cursor:pointer;
+    transition:all .15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .opt:hover{border-color:var(--teal);color:var(--teal);}
+  .opt.active-0{background:#fbeceb;border-color:var(--red);color:var(--red);}
+  .opt.active-3{background:#fdf3e2;border-color:var(--amber);color:var(--amber);}
+  .opt.active-5{background:#e9f7f2;border-color:var(--green);color:var(--green);}
+
+  .cat-total{
+    padding:12px 18px;background:var(--paper);
+    display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--navy);
+  }
+
+  /* ---------- RESULT ---------- */
+  .result{
+    margin-top:36px;border-radius:12px;padding:30px 28px;color:#fff;
+    background:linear-gradient(135deg,var(--navy),var(--teal));
+    text-align:center;
+  }
+  .result .big{font-size:52px;font-weight:800;line-height:1;}
+  .result .big span{font-size:20px;font-weight:400;opacity:.75;}
+  .result .band-name{font-size:16px;font-weight:700;margin:10px 0 6px;color:var(--mint);}
+  .result .band-desc{font-size:13px;color:#dceeff;max-width:480px;margin:0 auto 20px;}
+  .cta-btn{
+    display:inline-block;background:var(--mint);color:var(--navy);
+    padding:12px 26px;border-radius:30px;font-weight:800;font-size:13px;
+    text-decoration:none;
+  }
+  .cta-btn:hover{filter:brightness(1.05);}
+  .reset-link{
+    display:block;margin-top:16px;font-size:11.5px;color:#a9c4d9;
+    text-decoration:underline;cursor:pointer;background:none;border:none;
+  }
+
+  footer{
+    text-align:center;font-size:11px;color:var(--muted);
+    padding:28px 24px 40px;
+  }
+  footer a{color:var(--teal);font-weight:600;text-decoration:none;}
+
+  @media (max-width:520px){
+    .score-bar-inner{flex-wrap:wrap;}
+    .progress-track{order:3;width:100%;margin:8px 0 0;}
+    .item{flex-direction:column;align-items:flex-start;}
+    .opts{width:100%;}
+    .opt{flex:1;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="brand">SEOONLY</div>
+    <div class="brand-sub">AI SEO AGENCY · AUSTRALIA</div>
+    <h1>AI Citation<br><em>Score</em></h1>
+    <p class="lede">Score one page in about 5 minutes and find out how likely it is to be found, understood, and cited by ChatGPT, Perplexity, and Google AI Overviews.</p>
+    <div class="meta-row">
+      <span><span class="dot"></span>18 checkpoints</span>
+      <span><span class="dot"></span>6 categories</span>
+      <span><span class="dot"></span>100-point scale</span>
+    </div>
+  </div>
+</div>
+
+<div class="score-bar">
+  <div class="score-bar-inner">
+    <div>
+      <div class="score-label">Your score</div>
+      <div class="score-value" id="scoreValue">0 <span>/ 100</span></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="band-pill" id="bandPill" style="background:#eef2f4;color:#5b6b7a;">Not started</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="intro">
+    <h2>Pick one page. Rate each item.</h2>
+    <p>Use your homepage or highest-value service page. For every checkpoint, choose the option that best matches reality — your score updates as you go.</p>
+  </div>
+
+  <div id="categories"></div>
+
+  <div class="result" id="result">
+    <div class="big"><span id="resultValue">0</span><span> / 100</span></div>
+    <div class="band-name" id="resultBand">Get started above</div>
+    <div class="band-desc" id="resultDesc">Answer every checkpoint to see your full AI Citation Score and what it means for your visibility in AI search.</div>
+    <a class="cta-btn" href="https://seoonly.com.au" target="_blank" rel="noopener">Book a Free Strategy Call</a>
+    <button class="reset-link" onclick="resetAll()">Start over</button>
+  </div>
+</div>
+
+<footer>
+  &copy; 2026 SEOOnly &middot; AI SEO Agency, Australia &middot; <a href="https://seoonly.com.au" target="_blank" rel="noopener">seoonly.com.au</a>
+</footer>
+
+<script>
+const DATA = [
+  {
+    name: "Content Structure & Schema",
+    items: [
+      "FAQ schema markup is implemented on this page",
+      "Relevant schema present (Article, Product, HowTo, LocalBusiness, etc.)",
+      "Clear H2/H3 hierarchy that mirrors real user questions",
+      "Content is scannable — lists, tables, short paragraphs"
+    ]
+  },
+  {
+    name: "Topical Depth & Authority",
+    items: [
+      "Page covers related subtopics fully, not just one keyword",
+      "Author bio with real credentials / experience is visible",
+      "Original data, case studies, or proprietary insight included",
+      "Internal links connect this page into a clear topic cluster"
+    ]
+  },
+  {
+    name: "AI Crawlability & Technical Access",
+    items: [
+      "robots.txt allows major AI crawlers (GPTBot, PerplexityBot, ClaudeBot, etc.)",
+      "Core content loads without heavy JS-rendering dependency",
+      "XML sitemap is current and submitted"
+    ]
+  },
+  {
+    name: "Citation-Worthy Content Signals",
+    items: [
+      "A clear, quotable direct answer appears near the top of the page",
+      "Statistics and claims are sourced and easy to extract",
+      "Content shows a visible last-updated / current date"
+    ]
+  },
+  {
+    name: "Brand Entity Consistency",
+    items: [
+      "Business name, address, and details match everywhere online (NAP)",
+      "A structured knowledge presence exists (Wikidata, knowledge panel, directories)",
+      "Brand is mentioned consistently across reviews, socials, and third-party sites"
+    ]
+  },
+  {
+    name: "Conversational & Intent Match",
+    items: [
+      "Page answers natural-language questions, not just keyword phrases",
+      "An FAQ section addresses real questions customers actually ask",
+      "Tone and structure are concise enough to be read aloud or summarised"
+    ]
+  }
+];
+
+const TOTAL_ITEMS = DATA.reduce((sum, cat) => sum + cat.items.length, 0);
+const MAX_SCORE = TOTAL_ITEMS * 5;
+const answers = {};
+
+function itemKey(catIdx, itemIdx){ return catIdx + "-" + itemIdx; }
+
+function buildUI(){
+  const container = document.getElementById("categories");
+  DATA.forEach((cat, ci) => {
+    const catMax = cat.items.length * 5;
+    const catDiv = document.createElement("div");
+    catDiv.className = "category";
+    catDiv.innerHTML = `
+      <div class="cat-head">
+        <h3>${ci+1}. ${cat.name}</h3>
+        <span class="cat-pts">/ ${catMax} pts</span>
+      </div>
+      <div class="items-holder"></div>
+      <div class="cat-total">
+        <span>Category subtotal</span>
+        <span id="catTotal-${ci}">0 / ${catMax}</span>
+      </div>
+    `;
+    const itemsHolder = catDiv.querySelector(".items-holder");
+    cat.items.forEach((text, ii) => {
+      const key = itemKey(ci, ii);
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="item-text">${text}</div>
+        <div class="opts" data-key="${key}">
+          <button type="button" class="opt" data-val="0">Not present</button>
+          <button type="button" class="opt" data-val="3">Partial</button>
+          <button type="button" class="opt" data-val="5">Full</button>
+        </div>
+      `;
+      itemsHolder.appendChild(row);
+    });
+    container.appendChild(catDiv);
+  });
+
+  container.querySelectorAll(".opts").forEach(optsEl => {
+    const key = optsEl.dataset.key;
+    optsEl.querySelectorAll(".opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        answers[key] = parseInt(btn.dataset.val, 10);
+        optsEl.querySelectorAll(".opt").forEach(b => b.classList.remove("active-0","active-3","active-5"));
+        btn.classList.add("active-" + btn.dataset.val);
+        updateScore();
+      });
+    });
+  });
+}
+
+function updateScore(){
+  let total = 0;
+  let answeredCount = 0;
+  DATA.forEach((cat, ci) => {
+    let catTotal = 0;
+    cat.items.forEach((_, ii) => {
+      const key = itemKey(ci, ii);
+      if (key in answers){
+        catTotal += answers[key];
+        answeredCount++;
+      }
+    });
+    total += catTotal;
+    const catMax = cat.items.length * 5;
+    const el = document.getElementById("catTotal-" + ci);
+    if (el) el.textContent = catTotal + " / " + catMax;
+  });
+
+  document.getElementById("scoreValue").innerHTML = total + ' <span>/ 100</span>';
+  document.getElementById("resultValue").textContent = total;
+  const pct = Math.round((total / MAX_SCORE) * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+
+  const bandPill = document.getElementById("bandPill");
+  const resultBand = document.getElementById("resultBand");
+  const resultDesc = document.getElementById("resultDesc");
+
+  if (answeredCount === 0){
+    bandPill.textContent = "Not started";
+    bandPill.style.background = "#eef2f4";
+    bandPill.style.color = "#5b6b7a";
+    return;
+  }
+
+  let band, desc, color, bg;
+  if (total <= 40){
+    band = "At Risk"; color = "#c0392b"; bg = "#fbeceb";
+    desc = "This page is largely invisible to AI search tools right now. AI systems can't easily extract, trust, or quote your content — competitors with structured, well-sourced pages are being cited instead.";
+  } else if (total <= 65){
+    band = "Emerging"; color = "#d68910"; bg = "#fdf3e2";
+    desc = "Some foundations are in place, but inconsistent schema, thin topical coverage, or weak entity signals are capping your visibility in AI-generated answers.";
+  } else if (total <= 85){
+    band = "Competitive"; color = "#1e8449"; bg = "#e9f7f2";
+    desc = "A solid foundation. You're likely appearing in some AI answers already. Targeted fixes to your weakest category will meaningfully increase citation frequency.";
+  } else {
+    band = "AI-Cited Leader"; color = "#12594f"; bg = "#e9f7f2";
+    desc = "Your content is structured, sourced, and entity-consistent enough to be a preferred source for AI answer engines. Focus now shifts to defending and expanding that position.";
+  }
+
+  bandPill.textContent = band;
+  bandPill.style.background = bg;
+  bandPill.style.color = color;
+  resultBand.textContent = band + (answeredCount < TOTAL_ITEMS ? " (partial — " + answeredCount + "/" + TOTAL_ITEMS + " answered)" : "");
+  resultDesc.textContent = desc;
+}
+
+function resetAll(){
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll(".opt").forEach(b => b.classList.remove("active-0","active-3","active-5"));
+  updateScore();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+buildUI();
+updateScore();
+</script>
+</body>
+</html>
