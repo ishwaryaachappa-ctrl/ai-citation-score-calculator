@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Citation Score — Free GEO Readiness Calculator | SEOOnly</title>
+<meta name="description" content="Score your page's readiness to be cited by ChatGPT, Perplexity and Google AI Overviews. Free 100-point AI Citation Score calculator from SEOOnly.">
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#0f3d5c;
+    --teal:#12594f;
+    --mint:#7fe7d4;
+    --ink:#1a2332;
+    --muted:#5b6b7a;
+    --line:#dde6ea;
+    --paper:#f4f8f9;
+    --red:#c0392b;
+    --amber:#d68910;
+    --green:#1e8449;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    color:var(--ink);
+    background:#fff;
+    line-height:1.5;
+  }
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 55%,var(--teal) 100%);
+    color:#fff;
+    padding:48px 24px 56px;
+  }
+  .hero-inner{max-width:760px;margin:0 auto;}
+  .brand{font-size:13px;letter-spacing:3px;font-weight:700;color:var(--mint);}
+  .brand-sub{font-size:10.5px;letter-spacing:2px;color:#cfe8ff;margin-top:2px;}
+  h1{font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.12;margin:22px 0 10px;}
+  h1 em{font-style:normal;color:var(--mint);}
+  .lede{font-size:15.5px;color:#dceeff;max-width:520px;margin:0 0 20px;}
+  .meta-row{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#a9c4d9;}
+  .meta-row span{display:flex;align-items:center;gap:6px;}
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--mint);display:inline-block;}
+
+  /* ---------- SCAN BOX ---------- */
+  .scan-box{
+    margin-top:26px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:10px;
+    padding:16px;
+    backdrop-filter:blur(2px);
+  }
+  .scan-label{font-size:11px;letter-spacing:1.5px;color:var(--mint);text-transform:uppercase;font-weight:700;margin-bottom:8px;}
+  .scan-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .scan-input{
+    flex:1;min-width:200px;
+    padding:11px 14px;border-radius:7px;border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.95);color:var(--ink);font-size:13.5px;
+  }
+  .scan-input::placeholder{color:#8a97a3;}
+  .scan-btn{
+    padding:11px 20px;border-radius:7px;border:none;
+    background:var(--mint);color:var(--navy);font-weight:800;font-size:13px;cursor:pointer;
+    white-space:nowrap;
+  }
+  .scan-btn:disabled{opacity:.6;cursor:progress;}
+  .scan-status{margin-top:10px;font-size:12px;color:#dceeff;min-height:16px;}
+  .scan-status.error{color:#ffb4a8;}
+  .scan-status.success{color:var(--mint);}
+  .auto-tag{
+    display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.5px;
+    color:var(--teal);background:#e9f7f2;border:1px solid #bfe6da;
+    padding:2px 7px;border-radius:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+  .score-bar{
+    position:sticky;top:0;z-index:20;
+    background:#fff;
+    border-bottom:1px solid var(--line);
+    box-shadow:0 2px 10px rgba(11,37,69,0.06);
+  }
+  .score-bar-inner{
+    max-width:760px;margin:0 auto;padding:12px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .score-label{font-size:11px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;}
+  .score-value{font-size:24px;font-weight:800;color:var(--navy);}
+  .score-value span{font-size:13px;font-weight:400;color:var(--muted);}
+  .progress-track{flex:1;height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin:0 16px;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--mint));width:0%;transition:width .35s ease;}
+  .band-pill{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;white-space:nowrap;}
+
+  /* ---------- CATEGORY ---------- */
+  .intro{padding:32px 0 8px;}
+  .intro h2{font-size:19px;margin:0 0 8px;color:var(--navy);}
+  .intro p{font-size:13.5px;color:var(--muted);margin:0;}
+
+  .category{margin-top:28px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .cat-head{
+    background:var(--navy);color:#fff;padding:14px 18px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .cat-head h3{margin:0;font-size:14.5px;}
+  .cat-head .cat-pts{font-size:12px;color:var(--mint);font-weight:700;}
+  .item{
+    padding:16px 18px;border-bottom:1px solid #eef2f4;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .item:last-child{border-bottom:none;}
+  .item-text{font-size:13.5px;flex:1;min-width:220px;}
+  .opts{display:flex;gap:6px;flex-shrink:0;}
+  .opt{
+    border:1.5px solid var(--line);
+    background:#fff;
+    color:var(--muted);
+    font-size:11.5px;
+    font-weight:600;
+    padding:7px 12px;
+    border-radius:7px;
+    cursor:pointer;
+    transition:all .15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .opt:hover{border-color:var(--teal);color:var(--teal);}
+  .opt.active-0{background:#fbeceb;border-color:var(--red);color:var(--red);}
+  .opt.active-3{background:#fdf3e2;border-color:var(--amber);color:var(--amber);}
+  .opt.active-5{background:#e9f7f2;border-color:var(--green);color:var(--green);}
+
+  .cat-total{
+    padding:12px 18px;background:var(--paper);
+    display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--navy);
+  }
+
+  /* ---------- RESULT ---------- */
+  .result{
+    margin-top:36px;border-radius:12px;padding:30px 28px;color:#fff;
+    background:linear-gradient(135deg,var(--navy),var(--teal));
+    text-align:center;
+  }
+  .result .big{font-size:52px;font-weight:800;line-height:1;}
+  .result .big span{font-size:20px;font-weight:400;opacity:.75;}
+  .result .band-name{font-size:16px;font-weight:700;margin:10px 0 6px;color:var(--mint);}
+  .result .band-desc{font-size:13px;color:#dceeff;max-width:480px;margin:0 auto 20px;}
+  .cta-btn{
+    display:inline-block;background:var(--mint);color:var(--navy);
+    padding:12px 26px;border-radius:30px;font-weight:800;font-size:13px;
+    text-decoration:none;
+  }
+  .cta-btn:hover{filter:brightness(1.05);}
+  .reset-link{
+    display:block;margin-top:16px;font-size:11.5px;color:#a9c4d9;
+    text-decoration:underline;cursor:pointer;background:none;border:none;
+  }
+
+  footer{
+    text-align:center;font-size:11px;color:var(--muted);
+    padding:28px 24px 40px;
+  }
+  footer a{color:var(--teal);font-weight:600;text-decoration:none;}
+
+  @media (max-width:520px){
+    .score-bar-inner{flex-wrap:wrap;}
+    .progress-track{order:3;width:100%;margin:8px 0 0;}
+    .item{flex-direction:column;align-items:flex-start;}
+    .opts{width:100%;}
+    .opt{flex:1;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="brand">SEOONLY</div>
+    <div class="brand-sub">AI SEO AGENCY · AUSTRALIA</div>
+    <h1>AI Citation<br><em>Score</em></h1>
+    <p class="lede">Score one page in about 5 minutes and find out how likely it is to be found, understood, and cited by ChatGPT, Perplexity, and Google AI Overviews.</p>
+    <div class="meta-row">
+      <span><span class="dot"></span>20 checkpoints</span>
+      <span><span class="dot"></span>6 categories</span>
+      <span><span class="dot"></span>100-point scale</span>
+    </div>
+
+    <div class="scan-box">
+      <div class="scan-label">Scan a page (optional)</div>
+      <div class="scan-row">
+        <input type="text" class="scan-input" id="scanUrl" placeholder="Paste your page URL, e.g. https://yoursite.com.au/services" />
+        <button type="button" class="scan-btn" id="scanBtn" onclick="scanPage()">Scan &amp; Auto-Fill</button>
+      </div>
+      <div class="scan-status" id="scanStatus">We'll pull what we can from the page automatically — schema, headings, links, robots.txt. You'll still confirm the checkpoints we can't see from code alone.</div>
+    </div>
+  </div>
+</div>
+
+<div class="score-bar">
+  <div class="score-bar-inner">
+    <div>
+      <div class="score-label">Your score</div>
+      <div class="score-value" id="scoreValue">0 <span>/ 100</span></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="band-pill" id="bandPill" style="background:#eef2f4;color:#5b6b7a;">Not started</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="intro">
+    <h2>Pick one page. Rate each item.</h2>
+    <p>Use your homepage or highest-value service page. For every checkpoint, choose the option that best matches reality — your score updates as you go.</p>
+  </div>
+
+  <div id="categories"></div>
+
+  <div class="result" id="result">
+    <div class="big"><span id="resultValue">0</span><span> / 100</span></div>
+    <div class="band-name" id="resultBand">Get started above</div>
+    <div class="band-desc" id="resultDesc">Answer every checkpoint to see your full AI Citation Score and what it means for your visibility in AI search.</div>
+    <a class="cta-btn" href="https://seoonly.com.au" target="_blank" rel="noopener">Book a Free Strategy Call</a>
+    <button class="reset-link" onclick="resetAll()">Start over</button>
+  </div>
+</div>
+
+<footer>
+  &copy; 2026 SEOOnly &middot; AI SEO Agency, Australia &middot; <a href="https://seoonly.com.au" target="_blank" rel="noopener">seoonly.com.au</a>
+</footer>
+
+<script>
+const DATA = [
+  {
+    name: "Content Structure & Schema",
+    items: [
+      "FAQ schema markup is implemented on this page",
+      "Relevant schema present (Article, Product, HowTo, LocalBusiness, etc.)",
+      "Clear H2/H3 hierarchy that mirrors real user questions",
+      "Content is scannable — lists, tables, short paragraphs"
+    ]
+  },
+  {
+    name: "Topical Depth & Authority",
+    items: [
+      "Page covers related subtopics fully, not just one keyword",
+      "Author bio with real credentials / experience is visible",
+      "Original data, case studies, or proprietary insight included",
+      "Internal links connect this page into a clear topic cluster"
+    ]
+  },
+  {
+    name: "AI Crawlability & Technical Access",
+    items: [
+      "robots.txt allows major AI crawlers (GPTBot, PerplexityBot, ClaudeBot, etc.)",
+      "Core content loads without heavy JS-rendering dependency",
+      "XML sitemap is current and submitted"
+    ]
+  },
+  {
+    name: "Citation-Worthy Content Signals",
+    items: [
+      "A clear, quotable direct answer appears near the top of the page",
+      "Statistics and claims are sourced and easy to extract",
+      "Content shows a visible last-updated / current date"
+    ]
+  },
+  {
+    name: "Brand Entity Consistency",
+    items: [
+      "Business name, address, and details match everywhere online (NAP)",
+      "A structured knowledge presence exists (Wikidata, knowledge panel, directories)",
+      "Brand is mentioned consistently across reviews, socials, and third-party sites"
+    ]
+  },
+  {
+    name: "Conversational & Intent Match",
+    items: [
+      "Page answers natural-language questions, not just keyword phrases",
+      "An FAQ section addresses real questions customers actually ask",
+      "Tone and structure are concise enough to be read aloud or summarised"
+    ]
+  }
+];
+
+const TOTAL_ITEMS = DATA.reduce((sum, cat) => sum + cat.items.length, 0);
+const MAX_SCORE = TOTAL_ITEMS * 5;
+const answers = {};
+
+function itemKey(catIdx, itemIdx){ return catIdx + "-" + itemIdx; }
+
+function buildUI(){
+  const container = document.getElementById("categories");
+  DATA.forEach((cat, ci) => {
+    const catMax = cat.items.length * 5;
+    const catDiv = document.createElement("div");
+    catDiv.className = "category";
+    catDiv.innerHTML = `
+      <div class="cat-head">
+        <h3>${ci+1}. ${cat.name}</h3>
+        <span class="cat-pts">/ ${catMax} pts</span>
+      </div>
+      <div class="items-holder"></div>
+      <div class="cat-total">
+        <span>Category subtotal</span>
+        <span id="catTotal-${ci}">0 / ${catMax}</span>
+      </div>
+    `;
+    const itemsHolder = catDiv.querySelector(".items-holder");
+    cat.items.forEach((text, ii) => {
+      const key = itemKey(ci, ii);
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="item-text">${text}<span class="auto-tag" id="tag-${key}" style="display:none;">Auto</span></div>
+        <div class="opts" data-key="${key}">
+          <button type="button" class="opt" data-val="0">Not present</button>
+          <button type="button" class="opt" data-val="3">Partial</button>
+          <button type="button" class="opt" data-val="5">Full</button>
+        </div>
+      `;
+      itemsHolder.appendChild(row);
+    });
+    container.appendChild(catDiv);
+  });
+
+  container.querySelectorAll(".opts").forEach(optsEl => {
+    const key = optsEl.dataset.key;
+    optsEl.querySelectorAll(".opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        answers[key] = parseInt(btn.dataset.val, 10);
+        optsEl.querySelectorAll(".opt").forEach(b => b.classList.remove("active-0","active-3","active-5"));
+        btn.classList.add("active-" + btn.dataset.val);
+        updateScore();
+      });
+    });
+  });
+}
+
+function updateScore(){
+  let total = 0;
+  let answeredCount = 0;
+  DATA.forEach((cat, ci) => {
+    let catTotal = 0;
+    cat.items.forEach((_, ii) => {
+      const key = itemKey(ci, ii);
+      if (key in answers){
+        catTotal += answers[key];
+        answeredCount++;
+      }
+    });
+    total += catTotal;
+    const catMax = cat.items.length * 5;
+    const el = document.getElementById("catTotal-" + ci);
+    if (el) el.textContent = catTotal + " / " + catMax;
+  });
+
+  document.getElementById("scoreValue").innerHTML = total + ' <span>/ 100</span>';
+  document.getElementById("resultValue").textContent = total;
+  const pct = Math.round((total / MAX_SCORE) * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+
+  const bandPill = document.getElementById("bandPill");
+  const resultBand = document.getElementById("resultBand");
+  const resultDesc = document.getElementById("resultDesc");
+
+  if (answeredCount === 0){
+    bandPill.textContent = "Not started";
+    bandPill.style.background = "#eef2f4";
+    bandPill.style.color = "#5b6b7a";
+    return;
+  }
+
+  let band, desc, color, bg;
+  if (total <= 40){
+    band = "At Risk"; color = "#c0392b"; bg = "#fbeceb";
+    desc = "This page is largely invisible to AI search tools right now. AI systems can't easily extract, trust, or quote your content — competitors with structured, well-sourced pages are being cited instead.";
+  } else if (total <= 65){
+    band = "Emerging"; color = "#d68910"; bg = "#fdf3e2";
+    desc = "Some foundations are in place, but inconsistent schema, thin topical coverage, or weak entity signals are capping your visibility in AI-generated answers.";
+  } else if (total <= 85){
+    band = "Competitive"; color = "#1e8449"; bg = "#e9f7f2";
+    desc = "A solid foundation. You're likely appearing in some AI answers already. Targeted fixes to your weakest category will meaningfully increase citation frequency.";
+  } else {
+    band = "AI-Cited Leader"; color = "#12594f"; bg = "#e9f7f2";
+    desc = "Your content is structured, sourced, and entity-consistent enough to be a preferred source for AI answer engines. Focus now shifts to defending and expanding that position.";
+  }
+
+  bandPill.textContent = band;
+  bandPill.style.background = bg;
+  bandPill.style.color = color;
+  resultBand.textContent = band + (answeredCount < TOTAL_ITEMS ? " (partial — " + answeredCount + "/" + TOTAL_ITEMS + " answered)" : "");
+  resultDesc.textContent = desc;
+}
+
+function resetAll(){
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll(".opt").forEach(b => b.classList.remove("active-0","active-3","active-5"));
+  updateScore();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function setAnswer(key, val, auto){
+  answers[key] = val;
+  const optsEl = document.querySelector(`.opts[data-key="${key}"]`);
+  if (optsEl){
+    optsEl.querySelectorAll(".opt").forEach(b => b.classList.remove("active-0","active-3","active-5"));
+    const btn = optsEl.querySelector(`.opt[data-val="${val}"]`);
+    if (btn) btn.classList.add("active-" + val);
+  }
+  const tag = document.getElementById("tag-" + key);
+  if (tag) tag.style.display = auto ? "inline-block" : "none";
+}
+
+async function fetchText(url){
+  // Try a direct fetch first (works if the target sends permissive CORS headers).
+  try{
+    const res = await fetch(url, {mode:"cors", cache:"no-store"});
+    if (res.ok) return await res.text();
+  }catch(e){ /* fall through to proxy */ }
+
+  // Fall back to a public read-only CORS proxy for cross-origin pages.
+  const proxies = [
+    "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
+    "https://corsproxy.io/?" + encodeURIComponent(url)
+  ];
+  for (const p of proxies){
+    try{
+      const res = await fetch(p, {cache:"no-store"});
+      if (res.ok){
+        const t = await res.text();
+        if (t && t.length > 0) return t;
+      }
+    }catch(e){ /* try next proxy */ }
+  }
+  throw new Error("Could not retrieve this URL");
+}
+
+function extractJsonLd(doc){
+  const blocks = [];
+  doc.querySelectorAll('script[type="application/ld+json"]').forEach(s => {
+    try{
+      const parsed = JSON.parse(s.textContent);
+      const arr = Array.isArray(parsed) ? parsed : [parsed];
+      arr.forEach(item => {
+        if (item && item["@graph"] && Array.isArray(item["@graph"])) blocks.push(...item["@graph"]);
+        else blocks.push(item);
+      });
+    }catch(e){ /* skip malformed JSON-LD */ }
+  });
+  return blocks;
+}
+
+function typesFromJsonLd(blocks){
+  const types = [];
+  blocks.forEach(b => {
+    if (!b) return;
+    const t = b["@type"];
+    if (!t) return;
+    (Array.isArray(t) ? t : [t]).forEach(x => types.push(String(x).toLowerCase()));
+  });
+  return types;
+}
+
+async function scanPage(){
+  const input = document.getElementById("scanUrl");
+  const btn = document.getElementById("scanBtn");
+  const status = document.getElementById("scanStatus");
+  let raw = input.value.trim();
+  if (!raw){
+    status.className = "scan-status error";
+    status.textContent = "Paste a page URL first, e.g. https://yoursite.com.au/services";
+    return;
+  }
+  if (!/^https?:\/\//i.test(raw)) raw = "https://" + raw;
+
+  let target;
+  try{ target = new URL(raw); }
+  catch(e){
+    status.className = "scan-status error";
+    status.textContent = "That doesn't look like a valid URL — double check it and try again.";
+    return;
+  }
+
+  btn.disabled = true;
+  status.className = "scan-status";
+  status.textContent = "Scanning " + target.hostname + " …";
+
+  let filled = 0;
+  try{
+    const html = await fetchText(target.href);
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const bodyText = (doc.body ? doc.body.textContent : "").replace(/\s+/g," ").trim();
+    const jsonLd = extractJsonLd(doc);
+    const ldTypes = typesFromJsonLd(jsonLd);
+
+    // 1.0 FAQ schema
+    const hasFaqSchema = ldTypes.some(t => t.includes("faqpage"));
+    setAnswer("0-0", hasFaqSchema ? 5 : 0, true); filled++;
+
+    // 1.1 Relevant schema present
+    const richTypes = ["article","product","howto","localbusiness","service","organization"];
+    const hasRichSchema = ldTypes.some(t => richTypes.some(r => t.includes(r)));
+    setAnswer("0-1", hasRichSchema ? 5 : (ldTypes.length ? 3 : 0), true); filled++;
+
+    // Heading analysis (reused for 1.2 and 6.0)
+    const headings = Array.from(doc.querySelectorAll("h2,h3"));
+    const questionHeadings = headings.filter(h => /\?|^(how|what|why|when|where|who|which|can|does|do|is)\b/i.test(h.textContent.trim()));
+    let hHeadScore;
+    if (questionHeadings.length >= 3) hHeadScore = 5;
+    else if (questionHeadings.length >= 1) hHeadScore = 3;
+    else hHeadScore = headings.length ? 0 : 0;
+    setAnswer("0-2", hHeadScore, true); filled++;
+    setAnswer("5-0", hHeadScore, true); filled++;
+
+    // 1.3 Scannable content
+    const listCount = doc.querySelectorAll("ul,ol,table").length;
+    setAnswer("0-3", listCount >= 3 ? 5 : (listCount >= 1 ? 3 : 0), true); filled++;
+
+    // 2.1 Author bio
+    const hasAuthorSchema = jsonLd.some(b => b && (b.author || (b["@type"] === "Person")));
+    const hasAuthorMarkup = !!doc.querySelector('[rel="author"], [class*="author" i], [itemprop="author"]');
+    setAnswer("1-1", hasAuthorSchema ? 5 : (hasAuthorMarkup ? 3 : 0), true); filled++;
+
+    // 2.3 Internal links
+    const links = Array.from(doc.querySelectorAll("a[href]"));
+    const internalLinks = links.filter(a => {
+      try{
+        const u = new URL(a.getAttribute("href"), target.href);
+        return u.hostname === target.hostname;
+      }catch(e){ return false; }
+    });
+    setAnswer("1-3", internalLinks.length >= 8 ? 5 : (internalLinks.length >= 3 ? 3 : 0), true); filled++;
+
+    // 3.1 JS-rendering dependency (proxy: how much readable text is already in the HTML)
+    setAnswer("2-1", bodyText.length >= 800 ? 5 : (bodyText.length >= 300 ? 3 : 0), true); filled++;
+
+    // 4.0 Quotable direct answer near the top
+    const firstP = doc.querySelector("p");
+    const firstPLen = firstP ? firstP.textContent.trim().length : 0;
+    setAnswer("3-0", (firstPLen >= 50 && firstPLen <= 400) ? 5 : (firstPLen > 0 ? 3 : 0), true); filled++;
+
+    // 4.2 Last-updated visible
+    const hasDateMeta = !!doc.querySelector('meta[property="article:modified_time"], meta[property="article:published_time"]');
+    const hasDateSchema = jsonLd.some(b => b && (b.dateModified || b.datePublished));
+    const hasDateText = /(last updated|updated on|last modified)/i.test(bodyText);
+    setAnswer("3-2", (hasDateMeta || hasDateSchema || hasDateText) ? 5 : 0, true); filled++;
+
+    // 6.1 FAQ section present (visible)
+    const hasFaqHeading = headings.some(h => /faq|frequently asked/i.test(h.textContent));
+    setAnswer("5-1", (hasFaqSchema || hasFaqHeading) ? 5 : 0, true); filled++;
+
+    // robots.txt + sitemap.xml (best-effort, may fail silently for many hosts)
+    try{
+      const robotsTxt = await fetchText(target.origin + "/robots.txt");
+      const lower = robotsTxt.toLowerCase();
+      const aiBots = ["gptbot","perplexitybot","claudebot","ccbot","google-extended","anthropic-ai"];
+      const blocksAny = aiBots.some(bot => {
+        const idx = lower.indexOf(bot);
+        if (idx === -1) return false;
+        const chunk = lower.slice(idx, idx + 200);
+        return /disallow:\s*\/(\s|$)/.test(chunk);
+      });
+      setAnswer("2-0", blocksAny ? 0 : 5, true); filled++;
+    }catch(e){
+      setAnswer("2-0", 5, true); filled++; // no robots.txt found usually means nothing is blocked
+    }
+
+    try{
+      const sitemapTxt = await fetchText(target.origin + "/sitemap.xml");
+      const ok = /<urlset|<sitemapindex/i.test(sitemapTxt);
+      setAnswer("2-2", ok ? 5 : 0, true); filled++;
+    }catch(e){
+      setAnswer("2-2", 0, true); filled++;
+    }
+
+    updateScore();
+    status.className = "scan-status success";
+    status.textContent = "Scanned " + target.hostname + " — auto-filled " + filled + " of " + TOTAL_ITEMS + " checkpoints. Review the \"Auto\" tags below and adjust anything that doesn't look right, then score the rest manually.";
+  }catch(err){
+    status.className = "scan-status error";
+    status.textContent = "Couldn't scan this page automatically (the site may block external scanning). No problem — just score the checkpoints manually below.";
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+buildUI();
+updateScore();
+</script>
+</body>
+</html>
